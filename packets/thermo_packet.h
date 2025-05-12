@@ -16,5 +16,6 @@ typedef struct
 
 ThermoPacket generate_packet(uint8_t measurement_id);
 uint8_t calculate_checksum(ThermoPacket* pkt);
+void print_packet(const ThermoPacket* pkt);
 
 #endif

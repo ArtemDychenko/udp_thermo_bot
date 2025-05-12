@@ -1,7 +1,9 @@
-#include "ThermoPacket.h"
+#include "thermo_packet.h"
 #include <stdlib.h>
 #include <time.h>
 #include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
 
 
 uint8_t calculate_checksum(ThermoPacket* pkt)
@@ -26,4 +28,19 @@ ThermoPacket generate_packet(uint8_t measurement_id)
     pkt.measurement_id = measurement_id;
     pkt.checksum = calculate_checksum(&pkt);
     return pkt;
+}
+
+void print_packet(const ThermoPacket* pkt)
+{
+    char time_buffer[80];
+    time_t actual_time = pkt->timestamp + EPOCH_2024_OFFSET;
+    struct tm* timeinfo = localtime(&actual_time);
+    strftime(time_buffer, sizeof(time_buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
+
+    printf("Thermometer: time: %s, temp: %.1f °C, power: %s, id: %u, checksum: %u\n",
+           time_buffer,
+           pkt->temperature / 10.0,
+           pkt->power_status ? "Battery" : "Mains power supply",
+           pkt->measurement_id,
+           pkt->checksum);
 }
