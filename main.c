@@ -9,6 +9,8 @@
 #include <netdb.h>
 #include <time.h>
 #include <signal.h>
+#include <errno.h>
+
 
 #include "ThermoPacket.h"
 
@@ -21,23 +23,37 @@ void sig_handler(int sig)
 
 int main(int argc, char* argv[])
 {
-    signal(SIGINT, sig_handler);
-
-    int sockfd, server_portno, interval;
-    struct sockaddr_in server_addr;
-    const char* server_ip;
-
     if (argc != 4)
     {
         printf("Use '%s <server_ip> <server_port> <interval_sec>' to run it right\n", argv[0]);
         return 1;
     }
 
-    server_ip = argv[1];
-    server_portno = atoi(argv[2]);
-    interval = atoi(argv[3]);
+    signal(SIGINT, sig_handler);
 
-    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    struct sockaddr_in server_addr;
+    char *portno_endptr;
+    char *interval_endptr;
+    errno = 0;
+
+    const char* server_ip = argv[1];
+    const int server_portno = (int)strtol(argv[2], &portno_endptr, 10);
+    const int interval = (int)strtol(argv[3], &interval_endptr, 10);
+
+    if (errno == ERANGE || portno_endptr == argv[2] || *portno_endptr != '\0' ||
+    server_portno <= 0 || server_portno > 65535) {
+        fprintf(stderr, "Incorrect server port number, it should be in range 1 to 65535(preferably choose after 1024)\n");
+        return 1;
+    }
+
+    if (errno == ERANGE || interval_endptr == argv[3] || *interval_endptr != '\0' || interval <= 0)
+    {
+        fprintf(stderr, "Incorrect interval, it should be positive number\n");
+        return 1;
+    }
+
+
+    int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd < 0)
     {
         perror("Error while creating socket");
