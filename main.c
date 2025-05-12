@@ -45,10 +45,10 @@ int main(int argc, char* argv[])
     uint8_t measurement_id = 1;
     while (running)
     {
-        ThermoPacket pkt = generate_packet(measurement_id++);
+        ThermoPacket pkt = thermo_generate_packet(measurement_id++);
         sendto(sockfd, &pkt, sizeof(pkt), 0, (struct sockaddr*)&server_addr, sizeof(server_addr));
 
-        print_packet(&pkt);
+        thermo_print_packet(&pkt);
         sleep(interval);
     }
 

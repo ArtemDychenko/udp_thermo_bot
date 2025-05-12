@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 
-uint8_t calculate_checksum(ThermoPacket* pkt)
+uint8_t thermo_calculate_checksum(ThermoPacket* pkt)
 {
     uint8_t* ptr = (uint8_t*)pkt;
     size_t size = offsetof(ThermoPacket, checksum);
@@ -18,7 +18,7 @@ uint8_t calculate_checksum(ThermoPacket* pkt)
     return ckecksum;
 }
 
-ThermoPacket generate_packet(uint8_t measurement_id)
+ThermoPacket thermo_generate_packet(uint8_t measurement_id)
 {
     ThermoPacket pkt;
     uint32_t current_time = (uint32_t)time(NULL);
@@ -26,11 +26,11 @@ ThermoPacket generate_packet(uint8_t measurement_id)
     pkt.temperature = (uint16_t)(200 + rand() % (1200 - 200 + 1));
     pkt.power_status = rand() % 2;
     pkt.measurement_id = measurement_id;
-    pkt.checksum = calculate_checksum(&pkt);
+    pkt.checksum = thermo_calculate_checksum(&pkt);
     return pkt;
 }
 
-void print_packet(const ThermoPacket* pkt)
+void thermo_print_packet(const ThermoPacket* pkt)
 {
     char time_buffer[80];
     time_t actual_time = pkt->timestamp + EPOCH_2024_OFFSET;
