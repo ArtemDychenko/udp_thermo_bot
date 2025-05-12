@@ -2,7 +2,7 @@
 #define THERMO_PACKET_H
 
 #include <stdint.h>
-// timestamp dla 2024-01-01 zeby nie miec problem 2038 roku
+// timestamp for 2024-01-01 to avoid a 2032-year problem
 #define EPOCH_2024_OFFSET 1704067200
 
 typedef struct
