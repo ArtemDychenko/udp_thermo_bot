@@ -22,11 +22,6 @@
 *.la
 *.lo
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
 
 # Executables
 *.exe
@@ -35,6 +30,8 @@
 *.i*86
 *.x86_64
 *.hex
+main
+udp_thermo_bot
 
 # Debug files
 *.dSYM/
@@ -50,3 +47,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Idea IDE
+.idea/
